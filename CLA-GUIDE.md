@@ -8,6 +8,9 @@ Thank you for your interest in contributing to Windows-MCP! To ensure we can leg
 - [Our CLA Policy](#our-cla-policy)
 - [Contributing Code](#contributing-code)
 - [Adding Windows-MCP as a Custom Claude Extension](#adding-windows-mcp-as-a-custom-claude-extension)
+- [Accessibility Features](#accessibility-features)
+  - [ExecuteMarkdown Tool](#executemarkdown-tool)
+  - [Accessibility Best Practices](#accessibility-best-practices)
 - [Questions or Concerns?](#questions-or-concerns)
 
 ## What is a CLA?
@@ -212,6 +215,160 @@ After installation:
 - Ensure you have write permissions to the config file
 
 For more detailed troubleshooting, see the [MCP documentation](https://modelcontextprotocol.io/quickstart/server#claude-for-desktop-integration-issues).
+
+## Accessibility Features
+
+Windows-MCP includes accessibility features designed to support users with motor disabilities and other accessibility needs.
+
+### ExecuteMarkdown Tool
+
+The **ExecuteMarkdown** tool is a powerful accessibility feature that automatically executes code blocks from markdown files or content. This is particularly beneficial for users with motor disabilities who may have difficulty:
+- Typing long commands
+- Navigating multiple tools and windows
+- Performing repetitive setup procedures
+
+#### Use Cases
+
+1. **Automated Setup Scripts**: Execute entire deployment instructions from markdown documentation
+2. **Installation Guides**: Auto-run multi-step installation procedures
+3. **Configuration Files**: Execute code blocks that configure your system
+4. **Development Workflows**: Automate build and test scripts
+5. **Batch Operations**: Run multiple commands in sequence without manual intervention
+
+#### Supported Languages
+
+- **Python** (`.py` code blocks)
+- **PowerShell** (`.ps1`, `.posh`, `.powershell` blocks)
+- **Bash/Shell** (`.sh`, `.bash`, `.shell` blocks)
+
+#### Basic Usage in Claude Desktop
+
+Tell Claude: *"Execute the setup instructions from my markdown file at C:\path\to\setup.md"*
+
+Claude will:
+1. Read the markdown file
+2. Extract all code blocks
+3. Execute them in order
+4. Report the results with success/failure status for each block
+
+#### Example Markdown File
+
+```markdown
+# Setup Instructions
+
+Install Python dependencies:
+
+\`\`\`python
+import subprocess
+subprocess.run(["pip", "install", "requests", "numpy"], check=True)
+\`\`\`
+
+Create project directories:
+
+\`\`\`powershell
+New-Item -ItemType Directory -Path "C:\Projects\MyApp"
+Set-Location "C:\Projects\MyApp"
+\`\`\`
+
+Initialize git repository:
+
+\`\`\`bash
+git init
+git config user.name "Your Name"
+\`\`\`
+```
+
+#### Error Handling
+
+The ExecuteMarkdown tool has two modes:
+
+1. **Stop on Error** (default): Stops execution at the first failed code block
+2. **Skip on Error** (skip_on_error=True): Continues executing remaining blocks even if one fails
+
+#### Technical Details
+
+- **Timeout**: Each code block has a 30-second execution timeout
+- **Output Limiting**: Output is limited to first 500 characters per block
+- **Error Reporting**: Full error messages are captured and reported
+- **Execution Timing**: Each block's execution time is tracked and reported
+
+#### Creating Accessible Markdown Guides
+
+If you're creating documentation or guides for users with motor disabilities:
+
+1. **Organize Code Blocks**: Structure your markdown with clear code blocks
+2. **Add Context**: Include explanatory text before each code block
+3. **Use Comments**: Add comments within code blocks explaining what each line does
+4. **Test Your Blocks**: Verify that all code blocks execute correctly in order
+5. **Error Handling**: Include error handling in your scripts when possible
+6. **Progress Indicators**: Add status output in your code blocks to show progress
+
+#### Example Accessible Setup Guide
+
+```markdown
+# Accessible Windows Environment Setup
+
+This guide can be automatically executed using Windows-MCP's ExecuteMarkdown tool.
+
+## Step 1: Create Project Structure
+
+Create the main project directory:
+
+\`\`\`powershell
+# Create main project directory
+$ProjectPath = "C:\MyAccessibleProject"
+if (-not (Test-Path $ProjectPath)) {
+    New-Item -ItemType Directory -Path $ProjectPath
+    Write-Output "✓ Project directory created"
+} else {
+    Write-Output "✓ Project directory already exists"
+}
+\`\`\`
+
+## Step 2: Install Dependencies
+
+Install required Python packages:
+
+\`\`\`python
+import subprocess
+import sys
+
+packages = ["flask", "requests", "python-dotenv"]
+print("📦 Installing packages...")
+
+for package in packages:
+    subprocess.run([sys.executable, "-m", "pip", "install", package], check=True)
+    print(f"✓ {package} installed")
+\`\`\`
+
+## Step 3: Run Tests
+
+Execute test suite:
+
+\`\`\`bash
+echo "🧪 Running tests..."
+python -m pytest tests/ -v
+\`\`\`
+```
+
+### Accessibility Best Practices
+
+Windows-MCP is designed with accessibility in mind:
+
+1. **Voice Control Compatible**: Works well with voice control tools for hands-free operation
+2. **Minimal Manual Input**: Most operations can be triggered via voice or single commands
+3. **Clear Output**: All tool results are formatted clearly and logically
+4. **Keyboard Navigation**: All features are keyboard accessible
+5. **Batch Operations**: Run multiple commands together reduces repetitive actions
+6. **Documentation**: Extensive documentation supports users learning the system
+
+### Getting Help with Accessibility
+
+If you have accessibility needs or suggestions:
+
+- **GitHub Issues**: Open an issue with the [accessibility label](https://github.com/CursorTouch/Windows-MCP/issues?q=label%3Aaccessibility)
+- **Email**: [jeogeoalukka@gmail.com](mailto:jeogeoalukka@gmail.com)
+- **Discord**: Discuss accessibility features in our [community](https://discord.com/invite/Aue9Yj2VzS)
 
 ## Questions or Concerns?
 

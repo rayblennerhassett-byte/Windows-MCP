@@ -1,6 +1,7 @@
 from windows_mcp.analytics import PostHogAnalytics, with_analytics
 from windows_mcp.desktop.service import Desktop,Size
 from windows_mcp.watchdog.service import WatchDog
+from windows_mcp.markdown_executor.service import MarkdownExecutor
 from contextlib import asynccontextmanager
 from fastmcp.utilities.types import Image
 from mcp.types import ToolAnnotations
@@ -263,6 +264,63 @@ def scrape_tool(url:str,use_dom:bool=False, ctx: Context = None)->str:
     header_status = "Reached top" if vertical_scroll_percent <= 0 else "Scroll up to see more"
     footer_status = "Reached bottom" if vertical_scroll_percent >= 100 else "Scroll down to see more"
     return f'URL:{url}\nContent:\n[{header_status}]\n{content}\n[{footer_status}]'
+
+
+@mcp.tool(
+    name='ExecuteMarkdown',
+    description='Execute code blocks from markdown files or content. Supports Python, PowerShell, and Bash. Accessibility feature for users with motor disabilities - automatically execute setup scripts and deployment instructions. Can execute from file path or raw markdown content. Parameters: file_path (path to .md file) OR content (markdown string), skip_on_error (continue on failure). Returns execution summary with results for each code block.',
+    annotations=ToolAnnotations(
+        title="ExecuteMarkdown",
+        readOnlyHint=False,
+        destructiveHint=True,
+        idempotentHint=False,
+        openWorldHint=False
+    )
+)
+@with_analytics(analytics, "ExecuteMarkdown-Tool")
+def execute_markdown_tool(file_path: str|None=None, content: str|None=None, skip_on_error: bool=False, ctx: Context = None) -> str:
+    """Execute code blocks from markdown files or content.
+
+    file_path: Path to markdown file to execute code blocks from
+    content: Raw markdown content as string (alternative to file_path)
+    skip_on_error: If true, continue executing remaining blocks even if one fails
+    """
+    if not file_path and not content:
+        return 'Error: Either file_path or content parameter must be provided'
+
+    executor = MarkdownExecutor()
+
+    try:
+        if file_path:
+            result = executor.execute_markdown_file(file_path, skip_on_error=skip_on_error)
+        else:
+            result = executor.execute_markdown_content(content, skip_on_error=skip_on_error)
+
+        # Format the result for display
+        summary = f"""
+Markdown Execution Summary
+============================
+File: {result.get('file', 'direct content')}
+Code Blocks Found: {result['blocks_found']}
+Blocks Executed: {result['blocks_executed']}
+Blocks Failed: {result['blocks_failed']}
+Overall Status: {'✓ SUCCESS' if result['success'] else '✗ FAILED'}
+
+Execution Details:
+"""
+        for i, block_result in enumerate(result['results'], 1):
+            summary += f"""
+Block {i} ({block_result['language']}):
+  Status: {'✓ Success' if block_result['success'] else '✗ Failed'}
+  Time: {block_result['execution_time']}"""
+            if block_result['output']:
+                summary += f"\n  Output: {block_result['output'][:200]}"
+            if block_result['error']:
+                summary += f"\n  Error: {block_result['error'][:200]}"
+
+        return summary
+    except Exception as e:
+        return f'Error executing markdown: {str(e)}'
 
 
 @click.command()
