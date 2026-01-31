@@ -86,6 +86,10 @@
     {
       "name": "Scrape Tool",
       "description": "Fetch content from a URL or the active browser tab. By default (use_dom=False), performs a lightweight HTTP request to the URL and returns markdown content of complete webpage. Note: Some websites may block automated HTTP requests. If this fails, open the page in a browser and retry with use_dom=True to extract visible text from the active tab's DOM within the viewport."
+    },
+    {
+      "name": "ExecuteMarkdown",
+      "description": "Execute code blocks from markdown files or content. Supports Python, PowerShell, and Bash. Accessibility feature for users with motor disabilities - automatically execute setup scripts and deployment instructions. Automatically processes all code blocks in order, with optional error handling."
     }
   ],
   "compatibility": {
