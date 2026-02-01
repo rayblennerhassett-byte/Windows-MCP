@@ -26,7 +26,8 @@
 mcp-name: io.github.CursorTouch/Windows-MCP
 
 ## Updates
-- Windows-MCP reached 1M+ Users in [Claude Desktop Extensiosn](https://claude.ai/directory). 
+- **NEW**: ExecuteMarkdown tool and accessibility features for motor disability support - automatically execute setup scripts from markdown files via voice or single command.
+- Windows-MCP reached 1M+ Users in [Claude Desktop Extensiosn](https://claude.ai/directory).
 - Windows-MCP is now available on [PyPI](https://pypi.org/project/windows-mcp/) (thus supports `uvx windows-mcp`)
 - Windows-MCP is added to [MCP Registry](https://github.com/modelcontextprotocol/registry)
 - Try out 🪟[Windows-Use](https://github.com/CursorTouch/Windows-Use)!!, an agent built using Windows-MCP.
@@ -65,8 +66,11 @@ mcp-name: io.github.CursorTouch/Windows-MCP
 - **Real-Time Interaction**  
   Typical latency between actions (e.g., from one mouse click to the next) ranges from **0.4 to 1.2 secs**, and may slightly vary based on the number of active applications and system load, also the inferencing speed of the llm.
 
-- **DOM Mode for Browser Automation**  
+- **DOM Mode for Browser Automation**
   Special `use_dom=True` mode for State-Tool that focuses exclusively on web page content, filtering out browser UI elements for cleaner, more efficient web automation.
+
+- **Accessibility First**
+  Built with accessibility in mind. ExecuteMarkdown tool enables hands-free automation for users with motor disabilities via voice control or single commands, automatically executing complex setup scripts from markdown documentation.
 
 ## 🛠️Installation
 
@@ -308,6 +312,18 @@ MCP Client can access the following tools to interact with Windows:
 - `App`: To launch an application from the start menu, resize or move the window and switch between apps.
 - `Shell`: To execute PowerShell commands.
 - `Scrape`: To scrape the entire webpage for information.
+- `ExecuteMarkdown`: Execute code blocks from markdown files or content. Supports Python, PowerShell, and Bash. Accessibility feature for users with motor disabilities - automatically execute setup scripts and deployment instructions without manual typing.
+
+## ♿ Accessibility Features
+
+Windows-MCP is designed with accessibility in mind to support users with motor disabilities and other accessibility needs:
+
+- **ExecuteMarkdown Tool**: Automatically execute complex setup scripts from markdown files via voice command or single text input. Perfect for users with limited dexterity, tremors, or other motor challenges.
+- **Hands-Free Operation**: Full compatibility with voice control tools for completely hands-free automation.
+- **Batch Operations**: Run multiple commands in sequence without repetitive manual actions.
+- **Voice Control Compatible**: All features work seamlessly with Windows voice control and third-party accessibility tools.
+
+For detailed guidance on using accessibility features and creating accessible documentation, see our [Accessibility Guide](CLA-GUIDE.md#accessibility-features).
 
 ## 🤝 Connect with Us
 Stay updated and join our community:
